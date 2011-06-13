@@ -494,6 +494,7 @@ void SyncAgent::listenEvent()
         LOG_DEBUG( "SyncAgent: Remote client requesting session with server");
 
         ServerSessionHandler* handler = new ServerSessionHandler( iConfig, this );
+        iHandler = handler;
 
         connect( handler, SIGNAL(syncStateChanged(DataSync::SyncState )),
                  this, SLOT(receiveStateChanged(DataSync::SyncState)),
@@ -517,14 +518,13 @@ void SyncAgent::listenEvent()
 
         // * Begin synchronization session
         handler->serveRequest( data.iFragments );
-
-        iHandler = handler;
     }
     else if( data.iType == RequestListener::REQUEST_SAN_XML )
     {
         LOG_DEBUG( "SyncAgent: Remote server notifying client with OMA DS XML message");
 
         ClientSessionHandler* handler = new ClientSessionHandler( iConfig, this );
+        iHandler = handler;
 
         connect( handler, SIGNAL(syncStateChanged(DataSync::SyncState )),
                  this, SLOT(receiveStateChanged(DataSync::SyncState)),
@@ -548,14 +548,13 @@ void SyncAgent::listenEvent()
 
         // * Begin synchronization session
         handler->handleNotificationXML( data.iFragments );
-
-        iHandler = handler;
     }
     else if( data.iType == RequestListener::REQUEST_SAN_PACKAGE )
     {
         LOG_DEBUG( "SyncAgent: Remote server notifying client with OMA DS SAN package");
 
         ClientSessionHandler* handler = new ClientSessionHandler( iConfig, this );
+        iHandler = handler;
 
         connect( handler, SIGNAL(syncStateChanged(DataSync::SyncState )),
                  this, SLOT(receiveStateChanged(DataSync::SyncState)),
@@ -579,8 +578,6 @@ void SyncAgent::listenEvent()
 
         // * Begin synchronization session
         handler->handleNotificationPackage( data.iSANData );
-
-        iHandler = handler;
     }
     else
     {
